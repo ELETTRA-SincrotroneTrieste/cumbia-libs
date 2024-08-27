@@ -1,5 +1,18 @@
 # News
 
+## version 2.1.13
+
+### cumbia-qtcontrols
+
+Single parent QWidget argument constructor added to QuButton, QuInputOutput,
+QuSpinBox, QuDoubleSpinBox, QuComboBox, QuApplyNumeric.
+
+## versions up to 2.1.12
+
+Trivial fixes in order to build on Elettra older desktop installations.
+Most of the releases were used to trigger the automated installation
+procedure in use at Elettra.
+
 ## version 2.1.0
 
 Support for Qt6 has been introduced.

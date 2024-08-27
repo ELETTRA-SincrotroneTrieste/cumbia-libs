@@ -19,9 +19,8 @@ class QuDoubleSpinBox : public QDoubleSpinBox, public CuDataListener, public CuC
 
 public:
     QuDoubleSpinBox(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
-
     QuDoubleSpinBox(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
-
+    QuDoubleSpinBox(QWidget *parent);
     virtual ~QuDoubleSpinBox();
 
     // CuContextI interface

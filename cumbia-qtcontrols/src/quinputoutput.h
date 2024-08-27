@@ -60,6 +60,7 @@ public:
                   const CuControlsWriterFactoryI &w_fac);
 
     QuInputOutput(QWidget *parent, CumbiaPool* cu_poo, const CuControlsFactoryPool& f_poo);
+    QuInputOutput(QWidget *parent);
 
     ~QuInputOutput();
 

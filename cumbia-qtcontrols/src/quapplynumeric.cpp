@@ -13,10 +13,12 @@
 #include "qulogimpl.h"
 #include "quanimation.h"
 #include "cuengine_swap.h"
+#include "quapplication.h"
 
 #include <QPainter>
 #include <QPaintEvent>
 #include <QtDebug>
+#include <cumbiapool.h>
 
 /// @private
 class QuApplyNumericPrivate
@@ -35,8 +37,7 @@ public:
  *  Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuApplyNumeric::QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac)
-    : EApplyNumeric(parent)
-{
+    : EApplyNumeric(parent) {
     m_init();
     d->context = new CuContext(cumbia, w_fac);
 }
@@ -46,10 +47,16 @@ QuApplyNumeric::QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControls
  *   Please refer to \ref md_src_cumbia_qtcontrols_widget_constructors documentation.
  */
 QuApplyNumeric::QuApplyNumeric(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
-    : EApplyNumeric(parent)
-{
+    : EApplyNumeric(parent) {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
+}
+
+QuApplyNumeric::QuApplyNumeric(QWidget *w)
+   : EApplyNumeric(w) {
+    m_init();
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 /*! \brief class destructor

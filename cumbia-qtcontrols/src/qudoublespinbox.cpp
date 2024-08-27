@@ -10,6 +10,7 @@
 #include "cucontext.h"
 #include "qulogimpl.h"
 #include "cuengine_swap.h"
+#include "quapplication.h"
 
 class QuDoubleSpinBoxPrivate
 {
@@ -27,10 +28,17 @@ QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent, Cumbia *cumbia, const CuContro
 }
 
 QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool)
-    : QDoubleSpinBox(parent)
-{
+    : QDoubleSpinBox(parent) {
     d = new QuDoubleSpinBoxPrivate;
     d->context = new CuContext(cumbia_pool, fpool);
+    m_init();
+}
+
+QuDoubleSpinBox::QuDoubleSpinBox(QWidget *parent)
+    : QDoubleSpinBox(parent) {
+    d = new QuDoubleSpinBoxPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
     m_init();
 }
 

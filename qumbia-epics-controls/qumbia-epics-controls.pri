@@ -112,8 +112,8 @@ linux-g++|freebsd-g++ {
     }
 
 
-    VERSION_HEX = 0x020112
-    VERSION = 2.1.12
+    VERSION_HEX = 0x020113
+    VERSION = 2.1.13
 
     QMAKE_CXXFLAGS += -std=c++17 -Wall
 

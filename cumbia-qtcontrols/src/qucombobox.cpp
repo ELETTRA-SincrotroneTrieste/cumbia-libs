@@ -1,6 +1,7 @@
 #include "qucombobox.h"
 #include "cucontrolswriter_abs.h"
 #include "cuengine_swap.h"
+#include "quapplication.h"
 #include <cumacros.h>
 #include <cumbiapool.h>
 #include <cudata.h>
@@ -23,6 +24,7 @@
 #include <quvector.h>
 #include <qustring.h>
 #include <cucontrolsutils.h>
+#include <cumbiapool.h>
 
 /** @private */
 class QuComboBoxPrivate
@@ -60,8 +62,15 @@ QuComboBox::QuComboBox(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFact
 {
     m_init();
     d->context = new CuContext(cumbia_pool, fpool);
-    std::vector<std::string> vs = { "values" };
-    d->context->setOptions(CuData("fetch_props", vs ));
+    d->context->setOptions(CuData("fetch_props", std::vector<std::string>{ "values" } ));
+}
+
+QuComboBox::QuComboBox(QWidget *w) :
+    QComboBox(w), CuDataListener() {
+    m_init();
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
+    d->context->setOptions(CuData("fetch_props", std::vector<std::string>{ "values" } ));
 }
 
 void QuComboBox::m_init()

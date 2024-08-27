@@ -25,8 +25,8 @@ class QuApplyNumeric : public EApplyNumeric, public CuDataListener, public CuCon
 
 public:
     QuApplyNumeric(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac);
-
     QuApplyNumeric(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
+    QuApplyNumeric(QWidget *w);
 
     virtual ~QuApplyNumeric();
 

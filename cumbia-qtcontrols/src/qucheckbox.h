@@ -44,6 +44,7 @@ public:
                const CuControlsWriterFactoryI &w_fac);
 
      QuCheckBox(QWidget *parent, CumbiaPool* cu_poo, const CuControlsFactoryPool& f_poo);
+    QuCheckBox(QWidget *parent, const QString& text = QString());
 
      virtual ~QuCheckBox();
 

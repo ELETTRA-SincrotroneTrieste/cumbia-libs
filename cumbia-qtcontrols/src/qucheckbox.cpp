@@ -9,6 +9,7 @@
 #include <cucontext.h>
 #include <QtDebug>
 #include <cucontrolsutils.h>
+#include <cumbiapool.h>
 
 #include "cucontrolsreader_abs.h"
 #include "cucontrolswriter_abs.h"
@@ -19,6 +20,7 @@
 #include "culog.h"
 #include "qulogimpl.h"
 #include "cuserviceprovider.h"
+#include "quapplication.h"
 
 /// @private
 class QuCheckboxPrivate
@@ -56,7 +58,16 @@ QuCheckBox::QuCheckBox(QWidget *parent, CumbiaPool *cu_poo, const CuControlsFact
     d = new QuCheckboxPrivate;
     m_init();
     d->out_ctx = new CuContext(cu_poo, f_poo);
-    d->in_ctx = new CuContext(cu_poo, f_poo);
+    d->in_ctx  = new CuContext(cu_poo, f_poo);
+}
+
+QuCheckBox::QuCheckBox(QWidget *parent, const QString &text)
+    : QCheckBox(text, parent) {
+    d = new QuCheckboxPrivate;
+    m_init();
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->out_ctx = new CuContext(a->cumbiaPool(), *a->fpool());
+    d->in_ctx  = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 /** \brief the class destructor
@@ -72,7 +83,7 @@ QuCheckBox::~QuCheckBox()
 
 void QuCheckBox::m_init()
 {
-    d->in_ctx = d->out_ctx = NULL;
+    d->in_ctx = d->out_ctx = nullptr;
     d->auto_configure = true;
     d->ok = false;
     d->text_from_label = true;

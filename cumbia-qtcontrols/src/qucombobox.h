@@ -44,9 +44,8 @@ class QuComboBox : public QComboBox, public CuDataListener, public CuContextI
 
 public:
     QuComboBox(QWidget *w, Cumbia *cumbia, const CuControlsWriterFactoryI &r_fac);
-
     QuComboBox(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool);
-
+    QuComboBox(QWidget *w);
     virtual ~QuComboBox();
 
     QString target() const;

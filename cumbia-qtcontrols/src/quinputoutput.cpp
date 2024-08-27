@@ -1,3 +1,4 @@
+#include "quapplication.h"
 #include "quinputoutput.h"
 #include <qulabel.h>
 #include <cudata.h>
@@ -12,6 +13,7 @@
 #include <QLineEdit>
 #include <cucontext.h>
 #include <qustring.h>
+#include <cumbiapool.h>
 
 class QuInputOutputPrivate
 {
@@ -59,10 +61,24 @@ QuInputOutput::QuInputOutput(QWidget *parent, CumbiaPool *cu_poo, const CuContro
     d = new QuInputOutputPrivate;
     QuLabel *label = new QuLabel(this, cu_poo, f_poo);
     label->setDrawInternalBorder(false);
+    label->getContext()->setOptions(CuData("fetch_props", std::vector<std::string>{ "props" }));
     setOutputWidget(label);
     connect(label, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
     // Apply button
     new QuButton(getContainer(), cu_poo, f_poo);
+}
+
+QuInputOutput::QuInputOutput(QWidget *parent)
+    : EInputOutputWidget(parent) {
+    d = new QuInputOutputPrivate;
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    QuLabel *label = new QuLabel(this, a->cumbiaPool(), *a->fpool());
+    label->setDrawInternalBorder(false);
+    label->getContext()->setOptions(CuData("fetch_props", std::vector<std::string>{ "props" }));
+    setOutputWidget(label);
+    connect(label, SIGNAL(newData(const CuData&)), this, SLOT(onNewData(const CuData&)));
+    // Apply button
+    new QuButton(getContainer(), a->cumbiaPool(), *a->fpool());
 }
 
 void QuInputOutput::m_init()

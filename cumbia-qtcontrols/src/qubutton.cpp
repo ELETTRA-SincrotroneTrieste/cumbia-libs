@@ -18,6 +18,8 @@
 #include <QPaintEvent>
 #include <QPainter>
 #include <cuengine_swap.h>
+#include <quapplication.h>
+#include <cumbiapool.h>
 
 /// @private
 class QuButtonPrivate
@@ -54,6 +56,20 @@ QuButton::QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryP
 {
     m_init(text);
     d->context = new CuContext(cumbia_pool, fpool);
+}
+
+QuButton::QuButton(QWidget *w)
+    : QPushButton(w) {
+    m_init(QString());
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
+}
+
+QuButton::QuButton(const QString &text, QWidget *parent)
+    : QPushButton(parent) {
+    m_init(text);
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    d->context = new CuContext(a->cumbiaPool(), *a->fpool());
 }
 
 /** \brief the class destructor.
@@ -211,3 +227,4 @@ void QuButton::contextMenuEvent(QContextMenuEvent *e)
         m = new CuContextMenu(this);
     m->popup(e->globalPos(), this);
 }
+

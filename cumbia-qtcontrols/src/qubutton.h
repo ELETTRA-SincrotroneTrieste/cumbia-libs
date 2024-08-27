@@ -30,7 +30,8 @@ class QuButton : public QPushButton, public CuDataListener, public CuContextI
 public:
     QuButton(QWidget *parent, Cumbia *cumbia, const CuControlsWriterFactoryI &w_fac, const QString& text = "Apply");
     QuButton(QWidget *w, CumbiaPool *cumbia_pool, const CuControlsFactoryPool &fpool, const QString& text = "Apply");
-
+    QuButton(QWidget *w);
+    QuButton(const QString& text, QWidget* parent);
     virtual ~QuButton();
 
     QString target() const;
