@@ -37,11 +37,6 @@ public:
             *plugin_as_qobject = nullptr;
         T* pl = nullptr;
         QString plugin_path = getPluginAbsoluteFilePath(default_plugin_path, name);
-        printf("\e[1;33mCuPluginLoader.get: plugin_path: '%s' #defined '%s' passed as arg '%s'\n",
-               plugin_path.toStdString().c_str(),
-               CUMBIA_QTCONTROLS_PLUGIN_DIR,
-               default_plugin_path.toStdString().c_str());
-
         QPluginLoader loader(plugin_path);
         plugin = loader.instance();
         if(plugin) {

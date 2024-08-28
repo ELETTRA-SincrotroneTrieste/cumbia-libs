@@ -1,5 +1,4 @@
 #include "cupluginloader.h"
-#include <cumacros.h>
 #include <QProcessEnvironment>
 #include <QDir>
 #include <QRegularExpression>
@@ -29,9 +28,6 @@ QString CuPluginLoader::getPluginAbsoluteFilePath(const QString& default_plugin_
     if(default_plupa.isEmpty())
         default_plupa = QString(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     list = getPluginAbsoluteFilePaths(default_plupa, regu);
-    printf("CuPluginLoader::getPluginAbsoluteFilePath: pattern to regex '%s', default by arg '%s' "
-           " #defined '%s', list size %lld first '%s'\n", qstoc(name), qstoc(default_plugin_path),
-           CUMBIA_QTCONTROLS_PLUGIN_DIR, list.size(), list.size() > 0 ? qstoc(list.first()) : "EMPTY!");
     if(list.size() > 0)
         return list.first();
     return QString();
