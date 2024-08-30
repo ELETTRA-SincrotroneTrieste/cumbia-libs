@@ -351,7 +351,9 @@ void CuFormulaReader::onNewData(const CuData &da) {
                             valuelist << v;
                         }
                         if(!err) { // QJSValue::call see below
+                            printf("CuFormulaReader calling sval.call on '%s'\n", qstoc(formula));
                             result = sval.call(valuelist);
+                            printf("result undefined %d error %d\n", result.isUndefined(), result.isError());
                         }
                     }
                     /* QJSValue::call
@@ -366,8 +368,8 @@ void CuFormulaReader::onNewData(const CuData &da) {
                      *  isError() on the return value to determine whether an exception
                      *  occurred.
                      */
-                    err = !result.isUndefined() // QJSValue not callable
-                          && !result.isError(); // exception in the engine
+                    err = result.isUndefined() // QJSValue not callable
+                          || result.isError(); // exception in the engine
 
                     if(!err) {
                         CuVariant resvar = fromScriptValue(result);
@@ -382,6 +384,9 @@ void CuFormulaReader::onNewData(const CuData &da) {
                     }
                     else {
                         msg = "failed to call function " + d->formula_parser.formula().toStdString();
+                        if(result.isUndefined()) msg += ": result is undefined";
+                        if(result.isError()) msg += ": result is error";
+                        if(!result.isCallable()) msg+= ": not callable";
                     }
                 } // all read once
             } // if ! err
