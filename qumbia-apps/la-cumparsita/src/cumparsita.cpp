@@ -19,6 +19,8 @@ Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
 {
     QUiLoader *cumLoader= new QUiLoader(this);
+    if(cumLoader->pluginPaths().isEmpty())
+        cumLoader->addPluginPath(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);
     if(file.open(QIODevice::ReadOnly|QIODevice::Text)) {
