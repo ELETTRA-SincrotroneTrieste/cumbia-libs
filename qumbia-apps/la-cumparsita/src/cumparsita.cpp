@@ -23,6 +23,10 @@ Cumparsita::Cumparsita(QWidget *parent) :
         printf("la-cumparsita: plugin path empty: add '%s'\n", CUMBIA_QTCONTROLS_PLUGIN_DIR);
         cumLoader->addPluginPath(CUMBIA_QTCONTROLS_PLUGIN_DIR);
     }
+    else {
+        foreach(const QString& p, cumLoader->pluginPaths())
+            printf("la-cumparsita: + plugin dir '%s'\n", qstoc(p));
+    }
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);
     if(file.open(QIODevice::ReadOnly|QIODevice::Text)) {
