@@ -21,21 +21,10 @@
 #include <QPluginLoader>
 #include <cuformulaplugininterface.h>
 
-#ifdef QUMBIA_EPICS_CONTROLS
-#include <cuepics-world.h>
-#include <cumbiaepics.h>
-#include <cuepactionfactories.h>
-#include <cuepcontrolsreader.h>
-#include <cuepcontrolswriter.h>
-#endif
 
-#include <cumbiatango.h>
+#include <quapps.h>
 #include <cumacros.h>
 #include <cuthreadfactoryimpl.h>
-#include <qthreadseventbridgefactory.h>
-#include <cutcontrolsreader.h>
-#include <cutcontrolswriter.h>
-#include <cutangoactionfactories.h>
 #include <cutango-world.h>
 #include <culog.h>
 #include <qulogimpl.h>
@@ -164,34 +153,10 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     // Avoid including the http engine support (more generally, CuModuleLoader)
     //
     cumbia_pool = new CumbiaPool();
-#ifdef QUMBIA_EPICS_CONTROLS
-    CumbiaEpics* cuep = new CumbiaEpics(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+ \e[0m cumbia_epics %p created\n", cuep);
-    cumbia_pool->registerCumbiaImpl("epics", cuep);
-    m_ctrl_factory_pool.registerImpl("epics", CuEpReaderFactory());
-    m_ctrl_factory_pool.registerImpl("epics", CuEpWriterFactory());
-    CuEpicsWorld ew;
-    m_ctrl_factory_pool.setSrcPatterns("epics", ew.srcPatterns());
-    cumbia_pool->setSrcPatterns("epics", ew.srcPatterns());
-    CuServiceProvider *cuepsp = cuep->getServiceProvider();
-    cuepsp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
-#endif
-
-    CumbiaTango* cuta = new CumbiaTango(new CuThreadFactoryImpl(), new QThreadsEventBridgeFactory());
-    printf("\e[1;32m+ \e[0m cumbia_tango %p created\n", cuta);
-
-    cumbia_pool->registerCumbiaImpl("tango", cuta);
-    m_ctrl_factory_pool.registerImpl("tango", CuTWriterFactory());
-    m_ctrl_factory_pool.registerImpl("tango", CuTReaderFactory());
-    printf("\e[1;32m+-o\e[0m registered \"tango\" and \"epics\" implementations in the cumbia_pool %p\n", cumbia_pool);
-
-
-    CuTangoWorld tw;
-    m_ctrl_factory_pool.setSrcPatterns("tango", tw.srcPatterns());
-    cumbia_pool->setSrcPatterns("tango", tw.srcPatterns());
-
-    CuServiceProvider* cutangosp = cuta->getServiceProvider();
-    cutangosp->registerService(CuServices::Log, new CuLog(new QuLogImpl()));
+    CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
+    foreach(const QString&s, mloader.modules()) {
+        printf("designer plugin: loaded module '%s'\n", qstoc(s));
+    }
     CuPluginLoader plulo;
     QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
     QPluginLoader pluginLoader(plupath);

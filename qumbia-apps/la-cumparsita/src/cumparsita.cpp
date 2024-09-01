@@ -18,9 +18,6 @@
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
 {
-    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
-    CuModuleLoader mloader(a->cumbiaPool(), a->fpool(), &m_log_impl);
-
     QUiLoader *cumLoader= new QUiLoader(this);
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);
