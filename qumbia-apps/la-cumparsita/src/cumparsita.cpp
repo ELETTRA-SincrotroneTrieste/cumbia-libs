@@ -3,9 +3,6 @@
 #include <qthreadseventbridgefactory.h>
 #include <cumacros.h>
 
-#include <cuformulaplugininterface.h>
-#include <cupluginloader.h>
-#include <QPluginLoader>
 #include <QUiLoader>
 #include <QFile>
 #include <QMessageBox>
@@ -14,19 +11,17 @@
 #include <QtDebug>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 #include <QDir>
+#include <qpluginloader.h>
+#include <quapplication.h>
+#include <quapps.h>
 
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)
 {
+    QuApplication *a = static_cast<QuApplication *>(QCoreApplication::instance());
+    CuModuleLoader mloader(a->cumbiaPool(), a->fpool(), &m_log_impl);
+
     QUiLoader *cumLoader= new QUiLoader(this);
-    if(cumLoader->pluginPaths().isEmpty()) {
-        printf("la-cumparsita: plugin path empty: add '%s'\n", CUMBIA_QTCONTROLS_PLUGIN_DIR);
-        cumLoader->addPluginPath(CUMBIA_QTCONTROLS_PLUGIN_DIR);
-    }
-    else {
-        foreach(const QString& p, cumLoader->pluginPaths())
-            printf("la-cumparsita: + plugin dir '%s'\n", qstoc(p));
-    }
     QString ui_file = qApp->arguments().at(1);
     QFile file(ui_file);
     if(file.open(QIODevice::ReadOnly|QIODevice::Text)) {
