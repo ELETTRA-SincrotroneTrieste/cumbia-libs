@@ -155,8 +155,12 @@ CuCustomWidgetCollectionInterface::CuCustomWidgetCollectionInterface(QObject *pa
     cumbia_pool = new CumbiaPool();
     CuModuleLoader mloader(cumbia_pool, &m_ctrl_factory_pool, &m_log_impl);
     foreach(const QString&s, mloader.modules()) {
-        printf("designer plugin: loaded module '%s'\n", qstoc(s));
+        printf("--> --------------------------------------------------------\n");
+        printf("--> cumbia qt designer plugin: loaded module '\e[1;32m%s\e[0m'\n", qstoc(s));
     }
+    printf("--> cumbia qt designer plugin: cumbia engine can be changed\n"
+           "-->        calling \e[1;32mcumbia app module-default set\e[0m\n");
+    printf("--> --------------------------------------------------------\n");
     CuPluginLoader plulo;
     QString plupath = plulo.getPluginAbsoluteFilePath(CUMBIA_QTCONTROLS_PLUGIN_DIR, "cuformula-plugin.so");
     QPluginLoader pluginLoader(plupath);
