@@ -21,7 +21,7 @@ if(get_option('gprof_enable'))
 endif
 
 
-deps = [   dependency('cumbia', version : '>=2.1.16') ]
+deps = [   dependency('cumbia', version : '>=2.2.0') ]
 
 executable('timers-activities',
     sources,

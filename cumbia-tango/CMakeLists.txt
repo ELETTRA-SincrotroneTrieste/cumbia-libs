@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.10)
 
-project(cumbia-tango VERSION 2.1.16
+project(cumbia-tango VERSION 2.2.0
     DESCRIPTION "C++ library based on cumbia and the Tango control system"
     LANGUAGES CXX)
 
