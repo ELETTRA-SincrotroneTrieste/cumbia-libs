@@ -1,10 +1,10 @@
 #!/bin/bash
 
-old_version="2\.1\.12"
-old_version_hex="0x020112"
+old_version="2\.1\.15"
+old_version_hex="0x020115"
 
-new_version="2.1.13"
-new_version_hex="0x020113"
+new_version="2.1.16"
+new_version_hex="0x020116"
 
 echo -e " Will replace version $old_version with $new_version and $old_version_hex with $new_version_hex in all .pri and meson.build files"
 echo -n  -e " Do you want to continue [y|n]?  [y] "
@@ -22,3 +22,6 @@ find . -name "*.pri" -exec  sed -i "s/$old_version/$new_version/g" {} \;
 find . -name "meson.build" -exec  sed -i "s/$old_version_hex/$new_version_hex/g" {} \;
 
 find . -name "meson.build" -exec  sed -i "s/$old_version/$new_version/g" {} \;
+
+find . -name "CMakeLists.txt" -exec  sed -i "s/$old_version/$new_version/g" {} \;
+find . -name "CMakeLists.txt" -exec  sed -i "s/$old_version_hex/$new_version_hex/g" {} \;

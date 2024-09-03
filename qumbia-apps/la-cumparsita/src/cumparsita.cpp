@@ -3,9 +3,6 @@
 #include <qthreadseventbridgefactory.h>
 #include <cumacros.h>
 
-#include <cuformulaplugininterface.h>
-#include <cupluginloader.h>
-#include <QPluginLoader>
 #include <QUiLoader>
 #include <QFile>
 #include <QMessageBox>
@@ -14,6 +11,9 @@
 #include <QtDebug>
 #include <QtUiPlugin/QDesignerCustomWidgetCollectionInterface>
 #include <QDir>
+#include <qpluginloader.h>
+#include <quapplication.h>
+#include <quapps.h>
 
 Cumparsita::Cumparsita(QWidget *parent) :
     QWidget(parent)

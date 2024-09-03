@@ -261,10 +261,6 @@ void QuLabel::onUpdate(const CuData &da)
     if(!event) { // data generated periodically by a poller or by something else
         // update label if value changed
         update = !ok || d->last_d[TTT::Value] != da[TTT::Value];
-        // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
-        // even though measured alone the clone version performs better
-        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
-        d->last_d = da;
         if(strlen(d->msg) > 0)
             d->msg[0] = 0; // clear msg
     }
@@ -309,9 +305,10 @@ void QuLabel::onUpdate(const CuData &da)
 
             // check for state color string change before accessing palette
             const char* statc = da.c_str(TTT::StateColor);
-            const char* laststatc = d->last_d.c_str(TTT::StateColor);
-            if((statc && !laststatc) || (statc && laststatc && strcmp(statc, laststatc) != 0)) {
+            const std::string& oldc = d->last_d.s(TTT::StateColor);
+            if((statc && oldc.length() == 0) || (statc && strcmp(statc, oldc.c_str()) != 0)) {
                 background = d->palette[statc];
+
                 if(background.isValid()) {
                     setBackground(background);
                 }
@@ -329,7 +326,11 @@ void QuLabel::onUpdate(const CuData &da)
                 }
             }
         }
-    }
+        // onUpdate measures better with d->last_d = da; than with d->last_d = da.clone()
+        // even though measured alone the clone version performs better
+        //        d->last_d = da.clone(); // clone does a copy, then contents moved into last_d
+        d->last_d = da;
+    } // end if(update)
     //    auto end = std::chrono::high_resolution_clock::now();
     //    auto  duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
     //    std::cout << "Elapsed time QuLabel.update: " << duration.count() << " microseconds" << std::endl;

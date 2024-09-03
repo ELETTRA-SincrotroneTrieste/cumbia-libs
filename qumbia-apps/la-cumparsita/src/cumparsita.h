@@ -4,10 +4,6 @@
 #include <QWidget>
 #include <qulogimpl.h>
 
-
-class CuData;
-class CumbiaPool;
-
 /*! \mainpage
  * *la-cumparsita* app interprets *Qt designer* UI files and make them indistinguishable from a
  * dedicated compiled application.
@@ -49,12 +45,11 @@ class Cumparsita : public QWidget
 
 public:
     explicit Cumparsita(QWidget *parent = nullptr);
-
     QObject *get_cumbia_customWidgetCollectionInterface() const;
-
     ~Cumparsita();
 
 private:
+    QuLogImpl m_log_impl;
 };
 
 #endif // Cumparsita_H

@@ -74,6 +74,7 @@ protected:
     QIcon d_icon;
     CumbiaPool *cumbia_pool;
     CuControlsFactoryPool ctrl_factory_pool;
+    QuLogImpl m_log_impl;
 
 private:
     bool d_isInitialized;
