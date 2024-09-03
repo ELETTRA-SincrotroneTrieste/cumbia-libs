@@ -6,6 +6,7 @@
 #include <QPainter>
 #include <QPaintEvent>
 #include <quapplication.h>
+#include <cucontrolsutils.h>
 
 #include "cucontext.h"
 #include "culinkstats.h"
@@ -22,6 +23,8 @@ public:
     bool read_ok, value;
     QuPalette palette;
     CuContext *context;
+    CuControlsUtils u;
+    char msg[MSGLEN];
 };
 
 /** \brief Constructor with the parent widget, an *engine specific* Cumbia implementation and a CuControlsReaderFactoryI interface.
@@ -69,6 +72,7 @@ void QuLed::m_init()
     d->read_ok = d->value = false;
     setProperty("trueColor", QColor(Qt::green));
     setProperty("falseColor", QColor(Qt::red));
+    d->msg[0] = '\0';
 }
 
 /*! \brief the class destructor
@@ -121,7 +125,6 @@ void QuLed::onUpdate(const CuData &da)
 {
     QColor background, border;
     d->read_ok = !da[TTT::Err].toBool();  // da["err"]
-
     // update link statistics
     d->context->getLinkStats()->addOperation();
     if(!d->read_ok)
@@ -131,8 +134,6 @@ void QuLed::onUpdate(const CuData &da)
         background = d->palette[QString::fromStdString(da[TTT::QualityColor].toString())];  // da["qc"]
     if(da.containsKey(TTT::Color))  // da.containsKey("color")
         border = d->palette[QString::fromStdString(da[TTT::Color].toString())];  // da["color"]
-
-    setToolTip(da[TTT::Message].toString().c_str());  // da["msg"]
 
     setDisabled(da[TTT::Err].toBool() );  // da["err"]
     if(d->read_ok && da.containsKey(TTT::StateColor))  // da.containsKey("sc")
@@ -151,8 +152,14 @@ void QuLed::onUpdate(const CuData &da)
             break;
         }
     }
-    else if(!d->read_ok)
+    else if(!d->read_ok) {
         setColor(QColor(Qt::gray));
+        setToolTip(da.s(TTT::Message).c_str());
+    }
+    if(d->read_ok) {
+        d->u.msg_short(da, d->msg);
+        setToolTip(d->msg);
+    }
 
     if(da.containsKey(TTT::Color))  // da.containsKey("color")
         setBorderColor(d->palette[QString::fromStdString(da[TTT::Color].toString())]);  // da["color"]
@@ -189,3 +196,4 @@ void QuLed::contextMenuEvent(QContextMenuEvent *e) {
     CuContextMenu* m = new CuContextMenu(this);
     m->popup(e->globalPos(), this); // menu auto deletes after exec
 }
+

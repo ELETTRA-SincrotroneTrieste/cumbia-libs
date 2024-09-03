@@ -361,9 +361,7 @@ void QuLabel::mouseDoubleClickEvent(QMouseEvent *e) {
 
 bool QuLabel::event(QEvent *e) {
     if(e->type() == QEvent::ToolTip) {
-        printf("QuLabel::event \e[1;32mToolTip event!!!\e[0m\n");
         if(strlen(d->msg) == 0) {
-            printf("QuLabel::event generating msg on the fly\n ");
             d->u.msg_short(d->last_d, d->msg);
         }
         QToolTip::showText(static_cast<QHelpEvent *>(e)->globalPos(), d->msg);

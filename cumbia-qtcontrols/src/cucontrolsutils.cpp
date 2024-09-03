@@ -347,7 +347,6 @@ QString CuControlsUtils::msg(const CuData &da) const {
  * timestamp is given instead.
  */
 void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
-//    memset(buf, 0, sizeof(char) * MSGLEN);
     snprintf(buf, MSGLEN-1, "%s ", da.c_str(TTT::Src));
     int p = strlen(buf);
     const char* msg = da.c_str(TTT::Message);
@@ -363,21 +362,10 @@ void CuControlsUtils::msg_short(const CuData &da, char buf[MSGLEN]) {
         double tsd = 0.0;
         da[TTT::Time_us].to<double>(tsd);  // secs.usecs in a double
         if(tsd > 0) {
-//            auto start = std::chrono::high_resolution_clock::now();
-
             m_elapsed(tsd, buf, p);
             p = strlen(buf);
-
-//            auto end = std::chrono::high_resolution_clock::now();
-
-            // Calculate the elapsed time in microseconds
-//            auto duration = std::chrono::duration_cast<std::chrono::microseconds>(end - start);
-
-//            std::cout << "Elapsed time for short timestamp duration: " << duration.count() << " microseconds" << std::endl;
-
         }
     }
-
     const char *m = nullptr;
     int len = msg ? strlen(msg) : 0;
     if(len > 0) {
@@ -457,7 +445,6 @@ void CuControlsUtils::m_elapsed(time_t secs, const long &millis, char buf[MSGLEN
 void CuControlsUtils::m_elapsed(const double &us, char buf[MSGLEN], int offset) const {
     const time_t &tss = static_cast<time_t>(us);
     const long int& millis = static_cast<int>((us - tss) * 1000);
-//    printf("timestamp is %f secs is %ld millis is %ld\n", us, tss, millis);
     m_elapsed(tss, millis, buf, offset);
 }
 
