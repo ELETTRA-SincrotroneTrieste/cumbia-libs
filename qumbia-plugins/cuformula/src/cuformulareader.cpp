@@ -351,9 +351,7 @@ void CuFormulaReader::onNewData(const CuData &da) {
                             valuelist << v;
                         }
                         if(!err) { // QJSValue::call see below
-                            printf("CuFormulaReader calling sval.call on '%s'\n", qstoc(formula));
                             result = sval.call(valuelist);
-                            printf("result undefined %d error %d\n", result.isUndefined(), result.isError());
                         }
                     }
                     /* QJSValue::call
