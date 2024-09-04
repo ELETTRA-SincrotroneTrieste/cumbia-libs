@@ -306,6 +306,7 @@ isEmpty(DOXYGEN_BIN) {
     message("cumbia-qtcontrols.pro: doxygen not found")
 } else {
 
+    isEmpty(nodocs) {
     doc.commands = \
     doxygen \
     Doxyfile;
@@ -315,6 +316,9 @@ isEmpty(DOXYGEN_BIN) {
    QMAKE_EXTRA_TARGETS += doc
     !android-g++ {
         INSTALLS += doc
+    }
+    } else {
+        message("'nodocs' specified: not installing documentation")
     }
 }
     inc.files = $${HEADERS}

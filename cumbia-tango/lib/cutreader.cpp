@@ -111,7 +111,7 @@ void CuTReader::onResult(const CuData &data) {
  * \li "type" --> a constant string: "reader"
  */
 CuData CuTReader::getToken() const {
-    CuData da("source", d->tsrc.getName());
+    CuData da(TTT::Src, d->tsrc.getName());
     da[TTT::Type] = std::string("reader");  // da["type"]
     return da;
 }
@@ -199,8 +199,12 @@ bool CuTReader::isEventRefresh(CuTReader::RefreshMode rm) const {
  */
 void CuTReader::start()
 {
-    if(d->refresh_mode == ChangeEventRefresh)
+    if(d->refresh_mode == ChangeEventRefresh && d->tsrc.getType() == TSource::SrcAttr)
         m_startEventActivity();
+    else if(d->refresh_mode == ChangeEventRefresh && d->tsrc.getType() == TSource::SrcCmd) {
+        d->refresh_mode = PolledRefresh;
+        m_registerToPoller();
+    }
     else {
         d->polling_fallback = false;
         m_registerToPoller();
@@ -282,10 +286,10 @@ void CuTReader::m_update_options(const CuData newo) {
 void CuTReader::getData(CuData &ino) const {
     if(ino.containsKey(TTT::Period))
         ino[TTT::Period] = d->period;
-    if(ino.containsKey(TTT::RefreshMode))  // ino.containsKey("refresh_mode")
-        ino[TTT::RefreshMode] = d->refresh_mode;  // ino["refresh_mode"]
-    if(ino.containsKey(TTT::Mode))  // ino.containsKey("mode")
-        ino[TTT::Mode] = refreshModeStr();  // ino["mode"]
+    if(ino.containsKey(TTT::RefreshMode))
+        ino[TTT::RefreshMode] = d->refresh_mode;
+    if(ino.containsKey(TTT::Mode))
+        ino[TTT::Mode] = refreshModeStr();
 }
 
 /*!
@@ -404,6 +408,10 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period) {
     CuPollingService *polling_service = static_cast<CuPollingService *>(d->cumbia_t->getServiceProvider()->
                                                                         get(static_cast<CuServices::Type> (CuPollingService::CuPollingServiceType)));
     bool polled = polling_service->actionRegistered(this, d->period);
+    bool err = isEventRefresh(rm) && d->tsrc.getType() != TSource::SrcAttr;
+    if(err) {
+        perr("CuTReader.setRefreshMode: commands do not support events");
+    }
     if(d->event_activity || polled) {
 
         // start a new event activity if
@@ -443,7 +451,7 @@ void CuTReader::setRefreshMode(CuTReader::RefreshMode rm, int period) {
     }
     else if(rm == CuTReader::Manual)
         d->period = d->manual_mode_period;
-    if(d->refresh_mode != rm) // time to store rm into d->refresh_mode if not already done before
+    if(!err && d->refresh_mode != rm) // time to store rm into d->refresh_mode if not already done before
         d->refresh_mode = rm;
 }
 

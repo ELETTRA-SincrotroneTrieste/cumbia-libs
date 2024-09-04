@@ -249,8 +249,7 @@ bool QuLabel::ctxSwap(CumbiaPool *c_p, const CuControlsFactoryPool &fpool) {
     return csw.ok();
 }
 
-void QuLabel::onUpdate(const CuData &da)
-{
+void QuLabel::onUpdate(const CuData &da) {
     //    auto start = std::chrono::high_resolution_clock::now();
     const bool& ok = !da[TTT::Err].toBool();
     const char *mode = da[TTT::Mode].c_str();
@@ -265,11 +264,10 @@ void QuLabel::onUpdate(const CuData &da)
             d->msg[0] = 0; // clear msg
     }
     else { // "event" mode
-        //        printf("QuLabel.onUpdate: event driven, always updating and preparing tooltip msg, never saving data\n");
         d->u.msg_short(da, d->msg);
     }
     if(update) {
-        QColor background;
+        QColor bg; // background color
         if(!ok)
             d->context->getLinkStats()->addError(da.c_str(TTT::Message));
 
@@ -290,7 +288,9 @@ void QuLabel::onUpdate(const CuData &da)
             }
             if(da.containsKey(TTT::Value))  {
                 const CuVariant& val = da[TTT::Value];
-                QuLabelBase::decode(val, background);
+                // bg will be a valid color if color 'maps' (e.g. true/false colors) are
+                // defined as properties. In no other case decode sets a color
+                QuLabelBase::decode(val, bg);
                 if(d->display_u_enabled && strlen(d->display_u) > 0 &&
                     strlen(d_data->text) + strlen(d->display_u) + 1 < QULABEL_MAXLEN) {
                     strncat(d_data->text, d->display_u, 16);
@@ -298,22 +298,20 @@ void QuLabel::onUpdate(const CuData &da)
                 setText(d_data->text);
             }
         }
-        if(background.isValid()) { // from QuLabelBase.decode
-            setBackground(background);
+        if(bg.isValid()) { // from QuLabelBase.decode
+            // bg valid: colors were associated to values by properties. This has highest pri
+            setBackground(bg);
         }
         else {
-
             // check for state color string change before accessing palette
             const char* statc = da.c_str(TTT::StateColor);
             const std::string& oldc = d->last_d.s(TTT::StateColor);
             if((statc && oldc.length() == 0) || (statc && strcmp(statc, oldc.c_str()) != 0)) {
-                background = d->palette[statc];
-
-                if(background.isValid()) {
-                    setBackground(background);
-                }
+                bg = d->palette[statc];
+                if(bg.isValid())
+                    setBackground(bg);
             }
-            else if(!background.isValid()) {
+            else if(!bg.isValid() && !statc) {
                 const char *qc = da.c_str(TTT::QualityColor);
                 const char *lastqc = d->last_d.c_str(TTT::QualityColor);
                 // background has not already been set by QuLabelBase::setValue (this happens if either a
